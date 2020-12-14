@@ -233,6 +233,7 @@ private:
     
     std::recursive_mutex mutex_;
     std::mutex actuator_mutex_;
+    std::mutex sensor_msg_mutex_;
 
     std::array<uint8_t, MAX_SIZE> rx_buf_{};
     unsigned int baudrate_{kDefaultBaudRate};

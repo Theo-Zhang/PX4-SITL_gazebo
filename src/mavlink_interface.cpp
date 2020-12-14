@@ -192,6 +192,7 @@ void MavlinkInterface::Load()
 }
 
 void MavlinkInterface::SendSensorMessages(int time_usec) {
+  const std::lock_guard<std::mutex> lock(sensor_msg_mutex_);
 
   mavlink_hil_sensor_t sensor_msg;
 
@@ -272,6 +273,8 @@ void MavlinkInterface::SendGpsMessages(const SensorData::Gps &data) {
 }
 
 void MavlinkInterface::UpdateBarometer(const SensorData::Barometer &data) {
+  const std::lock_guard<std::mutex> lock(sensor_msg_mutex_);
+
   temperature_ = data.temperature;
   abs_pressure_ = data.abs_pressure;
   pressure_alt_ = data.pressure_alt;
@@ -280,12 +283,16 @@ void MavlinkInterface::UpdateBarometer(const SensorData::Barometer &data) {
 }
 
 void MavlinkInterface::UpdateAirspeed(const SensorData::Airspeed &data) {
+  const std::lock_guard<std::mutex> lock(sensor_msg_mutex_);
+
   diff_pressure_ = data.diff_pressure;
 
   diff_press_updated_ = true;
 }
 
 void MavlinkInterface::UpdateIMU(const SensorData::Imu &data) {
+  const std::lock_guard<std::mutex> lock(sensor_msg_mutex_);
+
   accel_b_ = data.accel_b;
   gyro_b_ = data.gyro_b;
 
@@ -293,6 +300,8 @@ void MavlinkInterface::UpdateIMU(const SensorData::Imu &data) {
 }
 
 void MavlinkInterface::UpdateMag(const SensorData::Magnetometer &data) {
+  const std::lock_guard<std::mutex> lock(sensor_msg_mutex_);
+
   mag_b_ = data.mag_b;
 
   mag_updated_ = true;
